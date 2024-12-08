@@ -14,7 +14,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -48,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: my_test_group
+    needs: build
     defaults:
       run:
         working-directory: ./example-app
