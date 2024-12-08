@@ -40,6 +40,13 @@ jobs:
     - name: install deps
       run: |
         poetry install --no-root
+    - name: Cache build venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v3
+      with:
+        path: /home/runner/work/iac-labs_jn_87872/iac-labs_jn_87872/example-app/.venv
+        key: ${{ runner.os }}--venv
+      
 
   lint:
     runs-on: ubuntu-latest
