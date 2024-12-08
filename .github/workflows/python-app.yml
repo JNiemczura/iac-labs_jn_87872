@@ -68,15 +68,15 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Install Poetry Action
       uses: snok/install-poetry@v1.3.4
-    - name: run-tests_LINT
-      run: |
-        poetry run task lint
     - name: Recover cached deps
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs_jn_87872/iac-labs_jn_87872/example-app/.venv
         key: ${{ runner.os }}--venv
+    - name: run-tests_LINT
+      run: |
+        poetry run task lint
         
   formatter:
     runs-on: ubuntu-latest
@@ -105,15 +105,16 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Install Poetry Action
       uses: snok/install-poetry@v1.3.4
-    - name: run-tests_FORMATTER
-      run: |
-        poetry run task formatter
     - name: Recover cached deps
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs_jn_87872/iac-labs_jn_87872/example-app/.venv
         key: ${{ runner.os }}--venv
+    - name: run-tests_FORMATTER
+      run: |
+        poetry run task formatter
+
         
   security:
     runs-on: ubuntu-latest
@@ -142,23 +143,23 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Install Poetry Action
       uses: snok/install-poetry@v1.3.4
-    - name: run-tests_SECURITY
-      run: |
-        poetry run task security
     - name: Recover cached deps
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs_jn_87872/iac-labs_jn_87872/example-app/.venv
         key: ${{ runner.os }}--venv
+    - name: run-tests_SECURITY
+      run: |
+        poetry run task security
+
         
   unit-test:
       runs-on: ubuntu-latest
-      needs: build
+      needs: [build, lint, formatter, security]
       defaults:
         run:
-          working-directory: ./example-app
-  
+          working-directory: ./example-app 
       steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.11
@@ -184,3 +185,6 @@ jobs:
         with:
           path: /home/runner/work/iac-labs_jn_87872/iac-labs_jn_87872/example-app/.venv
           key: ${{ runner.os }}--venv
+      - name: run-tests_TEST
+        run: |
+          poetry run task test
